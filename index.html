@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Tarea Jquery</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
+	<script type="text/javascript" src="app/jquery-3.3.1.js" ></script> 
+
+	<script type="text/javascript">
+		
+		function cargarEstudiantes(){
+
+			var tabla = "";
+			var tablaEstudiante = $("#tablaEstudiante");
+
+			tabla += '<table border="1">';
+			tabla += '<tr>';
+			tabla += '<th>Nombre</th>';
+			tabla += '<th>Matricula</th>';
+			tabla += '<th>Identificacion</th>';
+			tabla += '<th>...</th>';
+			tabla += '</tr>';
+
+			for (var i=0; i<localStorage.length; i++){
+				var matricula = localStorage.key(i);
+				var estudiante = $.parseJSON(localStorage.getItem(matricula));
+
+				tabla += '<tr>';
+				tabla += '<td>'+estudiante.nombre+'</td>';
+				tabla += '<td>'+estudiante.matricula+'</td>';
+				tabla += '<td>'+estudiante.identificacion+'</td>';
+				tabla += '<td><button onclick="editarEstudiante(\''+estudiante.matricula+'\');">Editar</button></td>';
+				tabla += '</tr>';
+			}
+			tabla += '</table>';
+			$(tablaEstudiante).html(tabla);
+		}
+
+
+		function editarEstudiante(matricula){
+			var estudiante;
+			for (var i = 0; i<localStorage.length; i++){
+				var clave = localStorage.key(i);
+				if (clave == matricula) {
+					estudiante = $.parseJSON(localStorage.getItem(clave));
+
+					$("#nombre").val(estudiante.nombre);
+					$("#matricula").val(estudiante.matricula);
+					$("#identificacion").val(estudiante.identificacion);
+				}
+			}
+		}
+
+function validarEstudiante(matricula){
+var estudiante;
+for(var i = 0; i<localStorage.length; i++){
+	var clave = localStorage.key(i);
+	if (clave == matricula) {
+		estudiante = $.parseJSON(localStorage.getItem(clave));
+		if (estudiante == matricula) {
+			estudiante.push(matricula);
+			localStorage.setItem("items" , JSON.stringify(estudiante));
+		}
+		alert("Actualizado");
+	}
+} 
+}
+		$(document).ready(function(){
+
+			$("#btnGuardar").click(function(){
+				var nombre = $("#nombre").val();
+				var matricula = $("#matricula").val();
+				var identificacion = $("#identificacion").val();
+
+
+				var estudiante = {
+					matricula : matricula,
+					nombre : nombre,
+					identificacion : identificacion
+				}
+
+				if(nombre !== "" && matricula !== "" && identificacion !== ""){
+					if (estudiante.matricula !== validarEstudiante(matricula)) {
+					localStorage.setItem(matricula,JSON.stringify(estudiante));
+					cargarEstudiantes();
+					Limpiar();
+				}
+
+				}else
+				{
+					alert("Campos Vacios");
+				}
+
+			});
+
+
+			function Limpiar(){
+				$("#nombre").val("");
+				$("#matricula").val("");
+				$("#identificacion").val("");
+			}
+
+			cargarEstudiantes();
+			$("#matricula").val();
+		})
+
+	</script>
+
+</head>
+<body>
+	<script src=""></script>
+	<br><br>
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<form>
+					<div class="form-group">
+						<label>Nombre:</label>
+						<input type="text" name="nombre" id="nombre" class="form-control">
+					</div>
+
+					<div class="form-group">
+						<label>Matricula:</label>
+						<input type="text" name="matricula" id="matricula" class="form-control">
+					</div>
+
+					<div class="form-group">
+						<label>Identificacion:</label>
+						<input type="text" name="identificacion" id="identificacion" class="form-control">
+					</div>
+					<button type="button" class="btn btn-primary" id="btnGuardar">Agregar</button>
+				</form>
+			</div>
+			<div class="col">
+				<table class="table text-center table-bordered" id="tablaEstudiante">
+					<thead>
+						<th>Nombre</th>
+						<th>Matricula</th>
+						<th>Identificacion</th>
+						<th>...</th>
+						<tbody>
+
+						</tbody>
+					</table>
+				</div>
+				<div class="col">
+
+				</div>
+			</div>
+		</div>
+	</body>
+	</html>
