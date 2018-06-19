@@ -35,7 +35,7 @@ function cargarEstudiantes(){
         }
     
     function removerEstudiante(matricula){
-    if (!confirm("Do you want to delete")){
+    if (!confirm("Desea quitar estudiante")){
       return false;
     }
     localStorage.removeItem(matricula);
